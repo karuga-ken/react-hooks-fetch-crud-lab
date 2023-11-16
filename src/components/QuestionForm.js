@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function QuestionForm(props) {
   const [formData, setFormData] = useState({
@@ -19,7 +19,23 @@ function QuestionForm(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
+    useEffect(() =>{
+      const post = {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        Body:
+            {
+              "prompt": "",
+              "answers": [''],
+              "correctIndex": {}
+            }
+          }
+            fetch('http://localhost:4000/questions', post)
+            .then ((r) => r.json())
+            .then(data => setFormData(data.id))
+      
+    }, []);
+    
   }
 
   return (
@@ -84,7 +100,7 @@ function QuestionForm(props) {
             <option value="3">{formData.answer4}</option>
           </select>
         </label>
-        <button type="submit">Add Question</button>
+        <button onClick={handleSubmit} type="submit">Add Question</button>
       </form>
     </section>
   );
